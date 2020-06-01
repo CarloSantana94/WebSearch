@@ -6,6 +6,7 @@ uri = "bolt://localhost:7687"
 user = "neo4j"
 password = "9932"
 
+artist_alias_location = "file:///artist_alias.csv"
 artist_location = "file:///artist.csv"
 artist_credit_name_location = "file:///artist_credit_name.csv"
 artist_credit_location = "file:///artist_credit.csv"
@@ -18,6 +19,15 @@ area_location = "file:///area.csv"
 label_location = "file:///label.csv"
 area_type_location = "file:///area_type.csv"
 gender_location = "file:///gender.csv"
+
+load_artist_alias_cypher = f" USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{artist_location}'" \
+                           "AS line CREATE (aal: Artist_Alias { id: line.id , artist : line.artist," \
+                           " name : line.name, locale :line.locale, edits_pending : line.edits_pending," \
+                           " last_updated : line.last_updated, type: line.type, sort_name : line.sort_name,  " \
+                           "begin_date_year : line.begin_date_year, begin_date_month : line.begin_date_month," \
+                           " begin_date_day : line.begin_date_day, end_date_year : line.end_date_year,  " \
+                           "end_date_month : line.end_date_month, end_date_day: line.end_date_day, " \
+                           " primary_for_locale: line.primary_for_locale,ended : line.ended})"
 
 load_artist_cypher = f"USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{artist_location}'" \
                      " AS line CREATE (a :Artist {id: line.id , name : line.name," \
@@ -83,6 +93,10 @@ load_label_cypher = f"USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{
                     "end_date_year : line.end_date_year, end_date_month : line.end_date_month, end_date_day : " \
                     "line.end_date_day, type : line.type, area : line.area, comment : line.comment, " \
                     "ended : line.ended}) "
+
+relationship_artist_alias = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Alias) " \
+                                  "WHERE a.id = b.artist RETURN a,b \",\"CREATE (a)-[r:HAS_ALIAS]->(b)\", " \
+                                  "{batchSize:10000, parallel:false})"
 
 relationship_artist_credit_name = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Credit_Name) " \
                                   "WHERE a.id = b.artist RETURN a,b \",\"CREATE (b)-[r:CREDITED]->(a)\", " \
@@ -201,6 +215,11 @@ class LoadDB:
         self.session.query(load_label_cypher)
         print("Finished importing label (12/20)")
 
+    # import artist_alias
+    def load_artist_alias(self):
+        self.session.query(load_artist_alias_cypher)
+        print("Finished importing label (13/20)")
+
     # relationship artist -> artist_credit_name
     def relate_artist_credit_name(self):
         self.session.query(relationship_artist_credit_name)
@@ -265,6 +284,11 @@ class LoadDB:
     def relate_medium_track(self):
         self.session.query(relationship_medium_track)
         print("Finished relationship track->medium (13/20)")
+
+    # relationship artist->artist_alias
+    def relate_artist_alias(self):
+        self.session.query(relationship_artist_alias)
+        print("Finished relationship artist->artist_alias (14/20)")
 
     def close_connection(self):
         self.session.close()
