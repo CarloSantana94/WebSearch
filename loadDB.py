@@ -20,7 +20,7 @@ label_location = "file:///label.csv"
 area_type_location = "file:///area_type.csv"
 gender_location = "file:///gender.csv"
 
-load_artist_alias_cypher = f" USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{artist_location}'" \
+load_artist_alias_cypher = f" USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{artist_alias_location}'" \
                            "AS line CREATE (aal: Artist_Alias { id: line.id , artist : line.artist," \
                            " name : line.name, locale :line.locale, edits_pending : line.edits_pending," \
                            " last_updated : line.last_updated, type: line.type, sort_name : line.sort_name,  " \
@@ -96,6 +96,10 @@ load_label_cypher = f"USING PERIODIC COMMIT 100000 LOAD CSV WITH HEADERS FROM '{
 
 relationship_artist_alias = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Alias) " \
                                   "WHERE a.id = b.artist RETURN a,b \",\"CREATE (a)-[r:HAS_ALIAS]->(b)\", " \
+                                  "{batchSize:10000, parallel:false})"
+
+relationship_artist_alias2 = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Alias2) " \
+                                  "WHERE a.id = b.artist RETURN a,b \",\"CREATE (a)-[r:HAS_ALIAS2]->(b)\", " \
                                   "{batchSize:10000, parallel:false})"
 
 relationship_artist_credit_name = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Credit_Name) " \
@@ -218,7 +222,7 @@ class LoadDB:
     # import artist_alias
     def load_artist_alias(self):
         self.session.query(load_artist_alias_cypher)
-        print("Finished importing label (13/20)")
+        print("Finished importing artist_alias (13/20)")
 
     # relationship artist -> artist_credit_name
     def relate_artist_credit_name(self):
