@@ -33,7 +33,7 @@ class Main:
     now2 = datetime.now()
     current_time2 = now2.strftime("%H:%M:%S")
     print("Current Time RecTrack1=", current_time2)
-    p1.relate_recording_track()
+    # p1.relate_recording_track()
     p1.relate_medium_format()
     p1.relate_artist_area()
     p1.relate_artist_gender()
