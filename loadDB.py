@@ -98,10 +98,6 @@ relationship_artist_alias = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:A
                                   "WHERE a.id = b.artist RETURN a,b \",\"CREATE (a)-[r:HAS_ALIAS]->(b)\", " \
                                   "{batchSize:10000, parallel:false})"
 
-relationship_artist_alias2 = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Alias2) " \
-                                  "WHERE a.id = b.artist RETURN a,b \",\"CREATE (a)-[r:HAS_ALIAS2]->(b)\", " \
-                                  "{batchSize:10000, parallel:false})"
-
 relationship_artist_credit_name = "CALL apoc.periodic.iterate(\"MATCH (a:Artist), (b:Artist_Credit_Name) " \
                                   "WHERE a.id = b.artist RETURN a,b \",\"CREATE (b)-[r:CREDITED]->(a)\", " \
                                   "{batchSize:10000, parallel:false})"
