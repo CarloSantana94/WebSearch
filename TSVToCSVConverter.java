@@ -6,19 +6,22 @@ import java.io.PrintWriter;
 
 public class TSVToCSVConverter {
 
-	private static String headerArea = " \"id\",\"gid\",\"name\",\"type\",\"edits_pending\",\"last_updated\",\"id\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"ended\",\"comment\"\n";
-	private static String headerAreaType = " \"id\",\"name\",\"parent\",\"child_order\",\"description\",\"gid\"\n";
-	private static String headerArtist = " \"id\",\"gid\",\"name\",\"sort_name\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"type\",\"area\",\"gender\",\"comment\",\"edits_pending\",\"last_updated\",\"ended\",\"begin_area\",\"end_area\" \n";
-	private static String headerArtistCredit = " \"id\",\"name\",\"artist_count\",\"ref_count\",\"created\",\"edits_pending\" \n";
-	private static String headerArtistCreditName = " \"artist_credit\",\"position\",\"artist\",\"name\",\"join_phrase\"\n";
-	private static String headerGender = " \"id\",\"name\",\"parent\",\"child_order\",\"child_order\",\"child_order\"\n";
-	private static String headerLabel = " \"id\", \"gid\", \"name\", \"begin_date_year\", \"begin_date_month\", \"begin_date_day\", \"end_date_year\", \"end_date_month\", \"end_date_day\", \"label_code\", \"type\", \"area\", \"comment\", \"edits_pending\", \"last_updated\", \"ended\"";
-	private static String headerMedium = " \"id\", \"release\", \"position\", \"format\", \"name\", \"edits_pending\", \"last_updated\", \"track_count\"\n";
+	private static String headerArea = "\"id\",\"gid\",\"name\",\"type\",\"edits_pending\",\"last_updated\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"ended\",\"comment\"\n";
+	private static String headerAreaType = "\"id\",\"name\",\"parent\",\"child_order\",\"description\",\"gid\"\n";
+	private static String headerArtist = "\"id\",\"gid\",\"name\",\"sort_name\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"type\",\"area\",\"gender\",\"comment\",\"edits_pending\",\"last_updated\",\"ended\",\"begin_area\",\"end_area\" \n";
+	private static String headerArtistCredit = "\"id\",\"name\",\"artist_count\",\"ref_count\",\"created\",\"edits_pending\" \n";
+	private static String headerArtistCreditName = "\"artist_credit\",\"position\",\"artist\",\"name\",\"join_phrase\"\n";
+	private static String headerGender = "\"id\",\"name\",\"parent\",\"child_order\",\"description\",\"gid\"\n";
+	private static String headerLabel = "\"id\",\"gid\",\"name\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"label_code\",\"type\",\"area\",\"comment\",\"edits_pending\",\"last_updated\",\"ended\"\n";
+	private static String headerMedium = "\"id\",\"release\",\"position\",\"format\",\"name\",\"edits_pending\",\"last_updated\",\"track_count\"\n";
 	private static String headerMediumFormat = "\"id\",\"name\",\"parent\",\"child_order\",\"year\",\"has_discids\",\"description\",\"gid\"\n";
-	private static String headerRecording = " \"id\", \"gid\", \"name\", \"artist_credit\", \"length\", \"comment\", \"edits_pending\", \"last_updated\", \"video\" \n";
-	private static String headerRelease = " \"id\", \"gid\", \"name\", \"artist_credit\", \"release_group\", \"status\", \"packaging\", \"language\", \"script\", \"barcode\", \"comment\", \"edits_pending\", \"quality\", \"last_updated\" \n";
-	private static String headerTrack =" \"id\", \"gid\", \"recording\", \"medium\", \"position\", \"number\", \"name\", \"artist_credit\", \"length\", \"edits_pending\", \"last_updated\", \"is_data_track\" \n";
-
+	private static String headerRecording = "\"id\",\"gid\",\"name\",\"artist_credit\",\"length\",\"comment\",\"edits_pending\",\"last_updated\",\"video\"\n";
+	private static String headerRelease = "\"id\",\"gid\",\"name\",\"artist_credit\",\"release_group\",\"status\",\"packaging\",\"language\",\"script\",\"barcode\",\"comment\",\"edits_pending\",\"quality\",\"last_updated\"\n";
+	private static String headerTrack ="\"id\",\"gid\",\"recording\",\"medium\",\"position\",\"number\",\"name\",\"artist_credit\",\"length\",\"edits_pending\",\"last_updated\",\"is_data_track\"\n";
+	private static String headerEvent = "\"id\",\"gid\",\"name\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"time\",\"type\",\"canceled\",\"setlist\",\"comment\",\"edits_pending\",\"last_updated\",\"ended\"\n";
+	private static String headerLartistEvent = "\"id\",\"link\",\"entity0\",\"entity1\",\"edits_pending\",\"last_updated\",\"link_order\",\"entity0_credit\",\"entity1_credit\"\n";
+	private static String headerArtistAlias = "\"id\",\"artist\",\"name\",\"locale\",\"edits_pending\",\"last_updated\",\"type\",\"sort_name\",\"begin_date_year\",\"begin_date_month\",\"begin_date_day\",\"end_date_year\",\"end_date_month\",\"end_date_day\",\"primary_for_locale\",\"ended\"\n";
+	
 	public static void main(String[] args) throws Exception {
 
 //		String tsvFilePathArea = "D:\Databases\mbdump\Area"
@@ -58,19 +61,35 @@ public class TSVToCSVConverter {
 		
 		String tsvFilePathTrack = "TrackPath";
 		String csvFilePathTrack = "TrackPath.csv";
+		
+		String tsvFilePathEvent = "D:\\Databases\\mbdump\\event";
+		String csvFilePathEvent = "D:\\Databases\\mbdump\\event.csv";
+		
+		String tsvFilePathLartistEvent = "D:\\Databases\\mbdump\\l_artist_event";
+		String csvFilePathLartistEvent = "D:\\Databases\\mbdump\\l_artist_event.csv";
+		
+		String tsvFilePathLartistRelease = "D:\\Databases\\mbdump\\l_artist_release";
+		String csvFilePathLartistRelease = "D:\\Databases\\mbdump\\l_artist_release.csv";
+		
+		String tsvFilePathArtistAlias = "D:\\Databases\\mbdump\\artist_alias";
+		String csvFilePathArtistAlias = "D:\\Databases\\mbdump\\artist_alias.csv";
 
-		convertTSVToCSVFile(csvFilePathArea, tsvFilePathArea, headerArea);
-		convertTSVToCSVFile(csvFilePathAreaType, tsvFilePathAreaType, headerAreaType);
-		convertTSVToCSVFile(csvFilePathArtist, tsvFilePathArtist, headerArtist);
-		convertTSVToCSVFile(csvFilePathArtistCredit, tsvFilePathArtistCredit, headerArtistCredit);
-		convertTSVToCSVFile(csvFilePathArtistCreditName, tsvFilePathArtistCreditName, headerArtistCreditName);
-		convertTSVToCSVFile(csvFilePathGender, tsvFilePathGender, headerGender);
-		convertTSVToCSVFile(csvFilePathLabel, tsvFilePathLabel, headerLabel);
-		convertTSVToCSVFile(csvFilePathMedium, tsvFilePathMedium, headerMedium);
-		convertTSVToCSVFile(csvFilePathMediumFormat, tsvFilePathMediumFormat, headerMediumFormat);
-		convertTSVToCSVFile(csvFilePathRecording, tsvFilePathRecording, headerRecording);
-		convertTSVToCSVFile(csvFilePathRelease, tsvFilePathRelease, headerRelease);
-		convertTSVToCSVFile(csvFilePathTrack, tsvFilePathTrack, headerTrack);
+//		convertTSVToCSVFile(csvFilePathArea, tsvFilePathArea, headerArea);
+//		convertTSVToCSVFile(csvFilePathAreaType, tsvFilePathAreaType, headerAreaType);
+//		convertTSVToCSVFile(csvFilePathArtist, tsvFilePathArtist, headerArtist);
+//		convertTSVToCSVFile(csvFilePathArtistCredit, tsvFilePathArtistCredit, headerArtistCredit);
+//		convertTSVToCSVFile(csvFilePathArtistCreditName, tsvFilePathArtistCreditName, headerArtistCreditName);
+//		convertTSVToCSVFile(csvFilePathGender, tsvFilePathGender, headerGender);
+//		convertTSVToCSVFile(csvFilePathLabel, tsvFilePathLabel, headerLabel);
+//		convertTSVToCSVFile(csvFilePathMedium, tsvFilePathMedium, headerMedium);
+//		convertTSVToCSVFile(csvFilePathMediumFormat, tsvFilePathMediumFormat, headerMediumFormat);
+//		convertTSVToCSVFile(csvFilePathRecording, tsvFilePathRecording, headerRecording);
+//		convertTSVToCSVFile(csvFilePathRelease, tsvFilePathRelease, headerRelease);
+//		convertTSVToCSVFile(csvFilePathTrack, tsvFilePathTrack, headerTrack);
+//		convertTSVToCSVFile(csvFilePathEvent, tsvFilePathEvent, headerEvent);
+//		convertTSVToCSVFile(csvFilePathLartistEvent, tsvFilePathLartistEvent, headerLartistEvent);	
+//		convertTSVToCSVFile(csvFilePathLartistRelease, tsvFilePathLartistRelease, headerLartistEvent);
+		convertTSVToCSVFile(csvFilePathArtistAlias, tsvFilePathArtistAlias, headerArtistAlias);
 
 	}
 
